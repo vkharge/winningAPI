@@ -1,0 +1,140 @@
+{
+	"info": {
+		"_postman_id": "2bff6c90-ec04-42a0-bb44-2e0386f67650",
+		"name": "WinningAPITest",
+		"description": "This API collections contains the REST API methods for retrieving a product via its \"URL slug\". This will provide the information required to display information about a product on the product details page.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get Valid Product Details",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "a2a26505-1628-4908-9101-a1c7695e93f6",
+						"exec": [
+							"",
+							"pm.test(\"Verify Response Code As 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Verify Response Code As OK\", function () {",
+							"    pm.response.to.have.status(\"OK\");",
+							"});",
+							"",
+							"pm.test(\"Verify Response Body Content\", function () {",
+							"    let expectedRespContent = pm.environment.get(\"expectedRespContent\");",
+							"    console.log(expectedRespContent);",
+							"    pm.expect(pm.response.json()).to.deep.include(expectedRespContent);",
+							"});",
+							"",
+							"",
+							"let response_time = pm.environment.get(\"responseTime\");",
+							"pm.test(\"Verify Response Time Is Less Than \" + response_time + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(parseInt(response_time));",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9380bd19-b56e-41cb-982e-710ef9f61837",
+						"exec": [
+							"",
+							"let expectedRespContent = {",
+							"    \"sku\": \"UA55TU8000WXXY\",",
+							"    \"productId\": 84933",
+							"}",
+							"",
+							"pm.environment.set(\"expectedRespContent\", expectedRespContent);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{server}}/api/v2/product/slug/{{product_slug}}",
+					"protocol": "https",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"product",
+						"slug",
+						"{{product_slug}}"
+					]
+				},
+				"description": "This is a GET API to fetch the product details based on the product slug.\n\nGET https://www.appliancesonline.com.au/api/v2/product/slug/{product_slug}"
+			},
+			"response": []
+		},
+		{
+			"name": "Invalid Product Slug",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "597cb7af-d4f7-4d5e-ae71-e0f95cf2e9c8",
+						"exec": [
+							"pm.test(\"Verify Response Code as 404\", function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"pm.test(\"Verify Response Code Name as Not Found\", function () {",
+							"    pm.response.to.have.status(\"Not Found\");",
+							"});",
+							"",
+							"let response_time = pm.environment.get(\"responseTime\");",
+							"pm.test(\"Verify Response Time Is Less Than \" + response_time + \"ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(parseInt(response_time));",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{server}}/api/v2/product/slug/{{invalid_slug}}",
+					"protocol": "https",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"product",
+						"slug",
+						"{{invalid_slug}}"
+					]
+				},
+				"description": "This is a GET API is used to fetch the product details based on the product slug. In this test a invalid product slug is passed as path parameter\n\nGET https://www.appliancesonline.com.au/api/v2/product/slug/{product_slug}"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
